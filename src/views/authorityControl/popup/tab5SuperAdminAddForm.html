@@ -1,0 +1,27 @@
+<form class="layui-form" action="" lay-filter="super-admin-table-addform">
+  <div class="layui-form-item">
+    <label class="layui-form-label" style="width: 42px;"><span style="color:#FF5722;font-family: SimSun;font-size: 14px;margin-right: 6px;">*</span>工号</label>
+    <div class="layui-input-block" style="margin-left: 78px;">
+      <input type="text" name="empnum" required  lay-verify="required" placeholder="请输入工号" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label" style="width: 42px;"><span style="color:#FF5722;font-family: SimSun;font-size: 14px;margin-right: 6px;">*</span>姓名</label>
+    <div class="layui-input-block" style="margin-left: 78px;">
+      <input type="text" name="empname" required  lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label" style="width: 42px;">权限</label>
+    <div class="layui-input-block" style="margin-left: 78px;">
+      <input type="checkbox" name="authAdmin" title="权限管理员" checked="true">
+      <input type="checkbox" name="appAdmin" title="系统管理员" checked="true">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label" style="width: 48px;"></label>
+    <div class="layui-input-inline">
+      <input type="button" lay-submit lay-filter="s-a-popform-submit" value="确认" class="layui-btn">
+    </div>
+  </div>
+</form>

@@ -1,0 +1,230 @@
+
+<title>模板角色</title>
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a lay-href="appControl/index"><cite>应用管理</cite></a>
+    <a lay-href="authorityControl/index"><cite id="pagedepth2"></cite></a>
+    <a><cite id="pagedepth3"></cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md4">    
+      <div class="layui-card">
+        <div class="layui-card-header">
+          基本信息
+        </div>
+        <div class="layui-card-body">
+          <div class="layui-row layui-col-space10">
+            <form class="layui-form" action="" lay-filter="function-field-table-addform">
+              <div class="layui-form-item" >
+                <label class="layui-form-label" style="width: 70px;padding:9px 15px 9px 0;"><span style="color:#FF5722;font-family: SimSun;font-size: 14px;margin-right: 6px;">*</span>角色标题</label>
+                <div class="layui-input-block" style="margin-left: 85px;">
+                  <input type="text" name="roleTitle" required  lay-verify="required" placeholder="请输入角色名称" autocomplete="off" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item" >
+                <label class="layui-form-label" style="width: 70px;padding:9px 15px 9px 0;"><span style="color:#FF5722;font-family: SimSun;font-size: 14px;margin-right: 6px;">*</span>角色名称</label>
+                <div class="layui-input-block" style="margin-left: 85px;">
+                  <input type="text" name="roleName" required  lay-verify="required" placeholder="请输入角色字段" autocomplete="off" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label"  style="width: 41px;">描述</label>
+                <div class="layui-input-block" style="margin-left: 85px;">
+                  <textarea name="roleDesc" placeholder="请输入描述" class="layui-textarea"></textarea>
+                </div>
+              </div>
+              <div class="layui-form-item" >
+                <label class="layui-form-label" style="width: 60px;padding-right: 0;padding-left: 0;"></label>
+                <div class="layui-input-block" style="margin-left: 85px;">
+                  <input type="radio" name="roleEnable" value="1" title="启用" >
+                  <input type="radio" name="roleEnable" value="0" title="停用" >
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 54px;"></label>
+                <div class="layui-input-inline" id="tab3Edit-buttonUpdate">
+                  <script type="text/html" id="tab3Edit-buttonUpdate-tmpl" >
+                    {{# if(d.userType){ }}
+                      <button lay-submit lay-filter="t-r-popform-submit" class="layui-btn">更新</button>
+                    {{# } else { }}
+                      <button  class="layui-btn layui-btn-disabled" disabled>更新</button>
+                    {{# } }}
+                  </script>
+                </div>
+              </div>
+            </form>             
+          </div>
+        </div>  
+      </div>
+    
+    </div>
+
+    <div class="layui-col-md8">
+      <div class="layui-card">
+        <div class="layui-card-header">绑定功能列表</div>
+        <div class="layui-card-body" style="padding: 15px 15px;">
+          <table id="tab3EditTable" lay-filter="tab3EditTable"></table>
+
+          <script type="text/html" id="tab3EditTable-state">
+            <input {{layui.data('userType').userType?"":"disabled"}} type="checkbox" name="{{d.funId}}" alt="{{d.funName}}" value="{{d.funEnable}}"  title="启用" lay-filter="funEnableLock" {{d.funEnable?'checked':''}}>
+          </script>
+
+          <script type="text/html" id="tab3EditTable-tool">
+            <button class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>设置</button>
+          </script>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+layui.use(['element','table','admin','form'], function(){
+  var element = layui.element,
+      $ = layui.$,
+      form = layui.form,
+      table = layui.table,
+      admin = layui.admin,
+      view = layui.view,
+      router = layui.router();
+      
+   //添加按钮权限控制
+  view('tab3Edit-buttonUpdate').send($('#tab3Edit-buttonUpdate-tmpl').html(),{userType:layui.data('userType').userType})
+  //面包屑导航渲染
+  $('#pagedepth2').text(layui.data('pagedepth').pagedepth2)
+  $('#pagedepth3').text(layui.data('pagedepth').pagedepth3)
+  //form渲染
+  form.render()
+  $.get(layui.setter.host + 'AppAdmin/Roles.jsp',{appId:layui.data('appId').appId,roleId:layui.data('roleId').roleId},function(data) {
+    item = JSON.parse(data).data[0]
+    form.val("function-field-table-addform", {
+      "roleEnable": item.roleEnable === 1 ? '1' : '0',
+      "roleTitle": item.roleTitle,
+      "roleName": item.roleName,
+      "roleDesc": item.roleDesc
+    })
+  })
+  //form更新按钮
+  form.on('submit(t-r-popform-submit)', function(data){
+    var item = {
+      act: 'save',
+      roleId : layui.data('roleId').roleId,
+      appId : layui.data('appId').appId,
+      roleEnable : data.field.roleEnable,
+      roleTitle : data.field.roleTitle,
+      roleName : data.field.roleName,
+      roleDesc : data.field.roleDesc
+    }
+    $.post(layui.setter.host + 'AppAdmin/Roles.jsp',item,function(success) {
+      console.log(JSON.parse(success))
+      if(JSON.parse(success).status === 1) {
+        layer.msg('更新成功!')
+      } else {
+        layer.msg('更新失败')
+      }
+    })
+    return false;
+  });
+
+  $('#tab3Edit-add').on('click', function(){
+    admin.popup({
+      title: '添加参数'
+      ,area: ['500px', '370px']
+      ,id: 'tab3Edit-addform-content'
+      ,success: function(layero, index){
+        view(this.id).render('authorityControl/tab3Edit/popupAdd').done(function(){
+          form.render(null, 'tab3Edit-table-addform');
+          
+          //监听提交
+          form.on('submit(tab3Edit-popform-submit)', function(data){
+            var field = data.field; //获取提交的字段
+
+            //提交 Ajax 成功后，关闭当前弹层并重载表格
+            //$.ajax({});
+            layui.table.reload('tab3Edit-table'); //重载表格
+            layer.close(index); //执行关闭 
+          });
+        });
+      }
+    });
+  });
+
+  //table的渲染,这下面的部分和tab4Edit里的功能card完全一样------------------------------------------------------
+  table.render({
+    elem: '#tab3EditTable',
+    url: layui.setter.host + 'AppAdmin/Funs.jsp',
+    where: {appId:layui.data('appId').appId,leixing:layui.data('leixing').leixing,leixingId:layui.data('leixing').leixingId},
+    cols: [[
+      {field: 'funEnable',title: '状态',width: 120, align:'center',templet:'#tab3EditTable-state'},
+      {field: 'funId',title: 'ID', align:'center',hide:true},
+      {field: 'funName', title: '角色名称' ,align:'center',},
+      {field: 'funTitle', title: '角色标题',  align:'center',minWidth: 100},
+      {title: '操作',width:100, unresize: true, align:'center', fixed: 'right', toolbar: '#tab3EditTable-tool'}
+    ]],
+    limit:100,
+    skin: 'line',
+    response:{statusName: 'status',statusCode:'1'},
+    height: 'full-220',
+    text: { none: '暂无数据' },
+  });
+  //监听工具条
+  table.on('tool(tab3EditTable)', function(obj){
+    console.log(table.cache.tab3EditTable);
+    var data = obj.data;
+    if(!data.funEnable){
+      layer.msg('请先启用该功能') 
+      return false
+    }
+    layui.data('funset', {key: 'funset',value: data.funId});
+    layui.data('funset', {key: 'funsetName',value: data.funName});
+    layui.data('pagedepth', {key: 'pagedepth4',value: data.funTitle});
+    layui.data('pagedepth', {key: 'pagedepth3href',value: 'authorityControl/tab3Edit/index'});
+    location.hash = '/authorityControl/tab43FunSet/index';
+  });
+  //监听table中form元素
+  form.on('checkbox(funEnableLock)', function(obj){
+    //layui form元素的点击不会实时改变其数据，只能自己手动改。用于该行设置按钮的判断
+    var itemFunEnable = table.cache.tab3EditTable.find(function(item) {
+      return item.funId == obj.elem.name
+    }).funEnable
+    itemFunEnable = itemFunEnable == 0 ? 1 : 0
+    table.cache.tab3EditTable.find(function(item) {
+      return item.funId == obj.elem.name
+    }).funEnable = itemFunEnable
+    
+    if(obj.elem.checked) {
+      var item = {
+        act: 'saveLeixingFuns',
+        appId : layui.data('appId').appId,
+        appName : layui.data('appName').appName,
+        leixing : layui.data('leixing').leixing,
+        leixingId : layui.data('leixing').leixingId,
+        funId: obj.elem.name,
+        funName: obj.elem.alt
+      }
+      $.post(layui.setter.host + 'AppAdmin/Funs.jsp',item,function(success) {
+        if(JSON.parse(success).status === 1) layer.msg('修改成功!')
+        else layer.msg('修改失败')
+      })
+    } else {
+      var item = {
+        act: 'deleteLeixingFuns',
+        appId : layui.data('appId').appId,
+        leixing : layui.data('leixing').leixing,
+        leixingId : layui.data('leixing').leixingId,
+        funId: obj.elem.name
+      }
+      $.post(layui.setter.host + 'AppAdmin/Funs.jsp',item,function(success) {
+        if(JSON.parse(success).status === 1) layer.msg('修改成功!')
+        else layer.msg('修改失败')
+      })
+    }
+  });
+})
+
+</script>

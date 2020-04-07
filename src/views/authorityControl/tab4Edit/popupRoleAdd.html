@@ -1,0 +1,17 @@
+<form class="layui-form" action="" lay-filter="tab4Edit-table-addform">
+  <div class="layui-form-item">
+      <script type="text/html" template>
+        {{#  layui.each(d.params, function(index, item){ }}
+          {{#  if(item.checked){ }}
+            <input type="checkbox" value="{{ item.roleId }}" title="{{ item.roleTitle }}" lay-filter="tab4Edit-addform-checkbox" checked>
+          {{#  } else { }} 
+            <input type="checkbox" value="{{ item.roleId }}" title="{{ item.roleTitle }}" lay-filter="tab4Edit-addform-checkbox">       
+          {{#  } }} 
+          
+        {{#  }); }}
+        {{#  if(d.params.length === 0){ }}
+          无数据
+        {{#  } }} 
+      </script>
+  </div>
+</form>

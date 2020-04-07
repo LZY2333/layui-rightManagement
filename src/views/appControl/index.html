@@ -1,0 +1,129 @@
+<title>应用管理</title>
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a lay-href="appControl/index"><cite>应用管理</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-card">
+    <div class="layui-form layui-card-header layuiadmin-card-header-auto" id="app-control-form" lay-filter="app-control-form" style="padding:0px;">
+      <div class="layui-form-item" >
+        <div class="layui-inline" style="margin: 5px;">
+          <label class="layui-form-label" style=" padding:5px 10px;">应用标题</label>
+          <div class="layui-input-block" style="margin-left: 110px; min-height:30px;">
+            <input type="text" name="appTitle" placeholder="请输入" autocomplete="off" class="layui-input" style="height: 30px;">
+          </div>
+        </div>
+        <div class="layui-inline" style="margin: 5px;">
+          <button class="layui-btn layuiadmin-btn-useradmin" lay-submit id="app-control-search" lay-filter="app-control-search" style="height:30px;line-height: 30px;">
+            <i class="layui-icon layui-icon-search layuiadmin-button-btn " ></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="layui-card-body">
+      <div style="padding-bottom: 10px;" id="app-buttonadd">
+        <script type="text/html" id="app-buttonadd-tmpl" >
+          {{# if(d.userType){ }}
+            <button class="layui-btn layuiadmin-btn-useradmin" id="app-control-add">创建新应用</button>
+          {{# } else { }}
+            <button class="layui-btn layuiadmin-btn-useradmin layui-btn-disabled" id="app-control-add" disabled>创建新应用</button>
+          {{# } }}
+        </script>
+      </div>
+
+      <table id="app-control-table" lay-filter="app-control-table"></table>
+      <script type="text/html" id="app-control-table-tool">
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>管理</a>
+      </script>
+    </div>
+  </div>
+</div>
+
+<script>
+  layui.use(['element','table','admin','form'], function(){
+    var element = layui.element,
+        $ = layui.$,
+        form = layui.form,
+        table = layui.table,
+        admin = layui.admin,
+        view = layui.view,
+        router = layui.router();
+
+    //添加按钮权限控制
+    view('app-buttonadd').send($('#app-buttonadd-tmpl').html(),{userType:layui.data('userType').userType})
+    //form查询表单
+    form.on('submit(app-control-search)', function(data){
+      var field = data.field;
+      //搜索完后重载
+      table.reload('app-control-table', {
+        where: field
+      });
+    });
+    //form回车键监听
+    $('#app-control-form').keyup(function(event){
+      if(event.keyCode ==13){
+        $("#app-control-search").trigger("click");
+      }
+    });
+      
+    //table的渲染
+    table.render({
+      elem: '#app-control-table',
+      url: layui.setter.host+'AppAdmin/Apps.jsp', //模拟接口
+      where: {token: layui.data("layuiAdmin")["token"] },
+      type: 'get',
+      cols: [[
+        {field: 'appName', title: '应用名称', minWidth: 100, hide: true},
+        {field: 'appTitle', title: '应用名称', minWidth: 100},
+        {field: 'appDesc', title: '描述', minWidth: 100},
+        {title: '操作',width:100, unresize: true, align:'center', fixed: 'right', toolbar: '#app-control-table-tool'}
+      ]],
+      page: true,
+      limit: 60,
+      skin: 'line',
+      height: 'full-250',
+      text: { none: '暂无数据' },
+      response:{statusName: 'status',statusCode:'1'}
+    });
+    
+    //监听工具条
+    table.on('tool(app-control-table)', function(obj){
+      var data = obj.data;
+      layui.data('appId', {key: 'appId',value: data.appId});
+      layui.data('appName', { key: 'appName' ,value: data.appName });
+      layui.data('authTab', { key: 'authTab' ,value: 'tab1' });
+      location.hash = '#/authorityControl/index'
+    });
+  
+    //左上角增加按钮
+    $('#app-control-add').on('click', function(){
+      admin.popup({
+        title: '新应用'
+        ,area: ['400px', '250px']
+        ,id: 'app-control-addform-content'
+        ,success: function(layero, index){
+          view(this.id).render('appControl/popup/addForm').done(function(){
+            form.render(null, 'app-control-addform');
+            
+            //监听提交
+            form.on('submit(a-c-addForm-submit)', function(data){
+              var field = data.field; //获取提交的字段
+              console.log({act:'save',appName:field.appName,appTitle:field.appTitle})
+              //提交 Ajax 成功后，关闭当前弹层并重载表格
+              $.post(layui.setter.host + 'AppAdmin/Apps.jsp',{act:'save',appName:field.appName,appTitle:field.appTitle});
+              layui.table.reload('app-control-table'); //重载表格
+              layer.close(index); //执行关闭 
+            });
+          });
+        }
+      });
+    });
+  
+  })
+  
+</script>
+

@@ -1,0 +1,73 @@
+<form class="layui-form" action="" lay-filter="tab2Edit-table-addform">
+  <div class="layui-form-item" style="display:none;">
+    <label class="layui-form-label" style="width: 70px;padding:9px 15px 9px 0"><span style="color:#FF5722;font-family: SimSun;font-size: 14px;margin-right: 6px;">*</span>ID</label>
+    <div class="layui-input-block" style="margin-left: 100px;">
+      <input type="text" name="id"  placeholder="id储存" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label" style="width: 70px;padding:9px 15px 9px 0"><span style="color:#FF5722;font-family: SimSun;font-size: 14px;margin-right: 6px;">*</span>属性类型</label>
+    <div class="layui-input-block" style="margin-left: 100px;">
+      <select name="parameterType" lay-verify="required" lay-filter="parameterType">
+        <option value="string" selected="">string</option>
+        <option value="shiyebu">shiyebu</option>
+        <option value="gzdd" >gzdd</option>
+      </select>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label" style="width: 70px;padding:9px 15px 9px 0"><span style="color:#FF5722;font-family: SimSun;font-size: 14px;margin-right: 6px;">*</span>属性标题</label>
+    <div class="layui-input-block" style="margin-left: 100px;">
+      <input type="text" name="parameterTitle" required  lay-verify="required" placeholder="请输入属性标题" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label" style="width: 70px;padding:9px 15px 9px 0"><span style="color:#FF5722;font-family: SimSun;font-size: 14px;margin-right: 6px;">*</span>属性名称</label>
+    <div class="layui-input-block" style="margin-left: 100px;">
+      <input type="text" name="parameterName" required  lay-verify="required" placeholder="请输入属性名称" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item layui-form-text">
+    <label class="layui-form-label"  style="width: 70px;padding:9px 15px 9px 0">属性描述</label>
+    <div class="layui-input-block" style="margin-left: 100px;">
+      <input name="parameterDesc" placeholder="请输入描述" class="layui-input"></input>
+    </div>
+  </div>
+
+  <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;" >
+    <legend>预设可选项</legend>
+  </fieldset>
+  <div class="layui-form-item layui-form-text">
+    <label class="layui-form-label"  style="width: 70px;padding:9px 15px 9px 0">
+      批量导入
+      <input type="button" id="tab2Edit-popform-resolve" value="解析" class="layui-btn" />
+    </label>
+    <div class="layui-input-block" style="margin-left: 100px;">
+      <textarea name="parameterSort" placeholder="请输入描述" class="layui-textarea"></textarea>
+    </div>
+  </div>
+  <div id="chooseItemLine0"></div>
+  
+
+  <script type="text/html" id="chooseItemTmpl">
+    <div class="layui-inline" style="margin-right:0px;">
+      <label class="layui-form-label"  style="width: 58px;padding: 9px 15px 9px 0;">选项名{{ d.count }}</label>
+      <div class="layui-input-inline" >
+        <input type="text" name="chooseItemName{{ d.count }}" required  lay-verify="noSpecialCharacter" placeholder="请输入选项名,必填" autocomplete="off" class="layui-input" value="{{d.name || '' }}"/>
+      </div>
+    </div>
+    <div class="layui-inline" style="margin-right:0px;">
+      <label class="layui-form-label"  style="width: 58px;padding: 9px 15px 9px 0;">选项值{{ d.count }}</label>
+      <div class="layui-input-inline" >
+        <input type="text" name="chooseItemValue{{ d.count }}"  placeholder="请输入选项展示值,可空" autocomplete="off" class="layui-input" value="{{d.value || '' }}"/>
+      </div>
+    </div>
+  </script>
+  
+  <div class="layui-form-item" style="margin-bottom: 0px;">
+    <div class="layui-input-inline" style="width: 200px;margin-left: 100px;">
+      <input type="button" lay-submit lay-filter="tab2Edit-popform-submit" value="保存" class="layui-btn" />
+      <input type="button" class="layui-btn layui-bg-blue" id="tab2Edit-popform-add"  value="+ 增加可选项" />
+    </div>
+  </div>
+</form>

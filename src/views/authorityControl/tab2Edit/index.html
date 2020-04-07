@@ -1,0 +1,336 @@
+
+<title>功能字段</title>
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a lay-href="appControl/index"><cite>应用管理</cite></a>
+    <a lay-href="authorityControl/index"><cite id="pagedepth2"></cite></a>
+    <a ><cite id="pagedepth3"></cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md4">    
+      <div class="layui-card">
+        <div class="layui-card-header">
+          基本信息
+        </div>
+        <div class="layui-card-body">
+          <div class="layui-row layui-col-space10">
+            <form class="layui-form" action="" lay-filter="function-field-table-addform">
+              <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 70px;padding:9px 15px 9px 0"><span style="color:#FF5722;font-family: SimSun;font-size: 14px;margin-right: 6px;">*</span>功能标题</label>
+                <div class="layui-input-block" style="margin-left: 85px;">
+                  <input type="text" name="funTitle" required  lay-verify="required" placeholder="请输入功能名称" autocomplete="off" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 70px;padding:9px 15px 9px 0"><span style="color:#FF5722;font-family: SimSun;font-size: 14px;margin-right: 6px;">*</span>功能名称</label>
+                <div class="layui-input-block" style="margin-left: 85px;">
+                  <input type="text" name="funName" required  lay-verify="required" placeholder="请输入功能" autocomplete="off" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label"  style="width: 41px;padding:9px 15px 9px 0">描述</label>
+                <div class="layui-input-block" style="margin-left: 85px;">
+                  <textarea name="funDesc" placeholder="请输入描述" class="layui-textarea"></textarea>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <div class="layui-input-inline" style="margin-left: 85px;" id="tab2Edit-buttonUpdate">
+                  <script type="text/html" id="tab2Edit-buttonUpdate-tmpl" >
+                    {{# if(d.userType){ }}
+                      <button lay-submit lay-filter="f-f-popform-submit" class="layui-btn">更新</button>
+                    {{# } else { }}
+                      <button lay-submit lay-filter="f-f-popform-submit" class="layui-btn layui-btn-disabled" disabled>更新</button>
+                    {{# } }}
+                  </script>
+                </div>
+              </div>
+            </form>             
+          </div>
+        </div>
+      </div>
+    
+    </div>
+    <div class="layui-col-md8">
+      <div class="layui-card">
+        <div class="layui-card-header" id="tab2Edit-buttonAdd">
+          绑定属性列表
+          <script type="text/html" id="tab2Edit-buttonAdd-tmpl" >
+            {{# if(d.userType){ }}
+              <button class="layui-btn layuiadmin-btn-useradmin layui-btn-xs" id="tab2Edit-add" style="margin-left:10px;">添加</button>
+            {{# } else { }}
+              <button class="layui-btn layuiadmin-btn-useradmin layui-btn-xs layui-btn-disabled" style="margin-left:10px;" disabled>添加</button>
+            {{# } }}
+          </script>
+        </div>
+        <div class="layui-card-body" style="padding: 15px 15px;">
+          <table id="tab2Edit-table" lay-filter="tab2Edit-table"></table>
+          <script type="text/html" id="tab2Edit-table-tool">
+            {{# if(layui.data('userType').userType){ }}
+              <button class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>修改</button>
+              <button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</button>
+            {{# } else { }}
+              <button class="layui-btn layui-btn-normal layui-btn-xs layui-btn-disabled"  disabled><i class="layui-icon layui-icon-edit"></i>修改</button>
+              <button class="layui-btn layui-btn-danger layui-btn-xs layui-btn-disabled"  disabled><i class="layui-icon layui-icon-delete"></i>删除</button>
+            {{# } }}
+            
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+layui.use(['element','table','admin','form'], function(){
+  var element = layui.element,
+      $ = layui.$,
+      form = layui.form,
+      table = layui.table,
+      admin = layui.admin,
+      view = layui.view,
+      router = layui.router();
+  //面包屑导航渲染
+  $('#pagedepth2').text( layui.data('pagedepth').pagedepth2)
+  $('#pagedepth3').text( layui.data('pagedepth').pagedepth3)
+  
+   //添加按钮权限控制
+  view('tab2Edit-buttonUpdate').send($('#tab2Edit-buttonUpdate-tmpl').html(),{userType:layui.data('userType').userType})
+  view('tab2Edit-buttonAdd').send($('#tab2Edit-buttonAdd-tmpl').html(),{userType:layui.data('userType').userType})
+  
+  $('#tab2Edit-add').on('click', function(){
+    admin.popup({
+      title: '为功能增加绑定属性'
+      ,area: ['600px', '520px']
+      ,id: 'tab2Edit-addform-content'
+      ,success: function(layero, index){
+        view(this.id).render('authorityControl/tab2Edit/popupAdd').done(function(){
+
+          var chooseItemCountOfAdd = 0
+
+          form.render(null, 'tab2Edit-table-addform');
+          form.verify({noSpecialCharacter: function(value, item){if(!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value))return '不能有特殊字符';}})
+
+          //监听增加预选值按钮
+          $('#tab2Edit-popform-add').on('click',function() {
+            var chooseItem = {count:++chooseItemCountOfAdd ,value:'',name:''}
+            $('#chooseItemLine' + (chooseItem.count - 1)).after('<div class="layui-form-item layui-form-text" id="chooseItemLine' + chooseItem.count + '"></div>')
+            view('chooseItemLine' + chooseItem.count).send($('#chooseItemTmpl').html(),chooseItem)
+          })
+          //监听解析按钮
+          $('#tab2Edit-popform-resolve').on('click',function() {
+            var str = form.val('tab2Edit-table-addform').parameterSort
+            var array = resolveParameterValues(str.replace(/\s*/g,""))
+            array.forEach(function(item,index) {
+              var chooseItem = {count:chooseItemCountOfAdd + index + 1,value:item.chooseItemValue,name:item.chooseItemName}
+              $('#chooseItemLine' + (chooseItem.count - 1)).after('<div class="layui-form-item layui-form-text" id="chooseItemLine' + chooseItem.count + '"></div>')
+              view('chooseItemLine' + chooseItem.count).send($('#chooseItemTmpl').html(),chooseItem)
+            })
+            chooseItemCountOfAdd += array.length
+          })
+          //监听提交
+          form.on('submit(tab2Edit-popform-submit)', function(data){
+            var field = data.field; //获取提交的字段
+            var item = {
+              act : 'save',
+              funId : layui.data('funId').funId,
+              parameterType : data.field.parameterType,
+              parameterName : data.field.parameterName,
+              parameterTitle : data.field.parameterTitle,
+              parameterDesc : data.field.parameterDesc,
+              parameterValues : formatParameterValues(field,chooseItemCountOfAdd)
+            }
+            $.post(layui.setter.host + 'AppAdmin/FunsParameters.jsp',item,function(success) {
+              if(JSON.parse(success).status === 1) {
+                layer.msg('添加成功!')
+              } else {
+                layer.msg('添加失败')
+              }
+              layui.table.reload('tab2Edit-table'); //重载表格
+              layer.close(index); //执行关闭 
+            })
+            
+          });
+        });
+      }
+      ,end: function () {chooseItemCountOfAdd = 0}
+    });
+  });
+
+  //监听工具条
+  table.on('tool(tab2Edit-table)', function(obj){
+    var data = obj.data;
+    if(obj.event === 'del'){
+      layer.confirm('是否确认删除?', function(index){
+        $.post(layui.setter.host + 'AppAdmin/FunsParameters.jsp',{act: 'delete',id: data.id},function(success) {
+          console.log(JSON.parse(success))
+          if(JSON.parse(success).status === 1) layer.msg('删除成功!')
+          else layer.msg('删除失败')
+          obj.del();
+          layer.close(index);
+        })
+      });
+    } else if(obj.event === 'edit'){
+      admin.popup({
+      title: '修改功能绑定属性'
+      ,area: ['600px', '520px']
+      ,id: 'tab2Edit-addform-content'
+      ,success: function(layero, index){
+        view(this.id).render('authorityControl/tab2Edit/popupAdd').done(function(){
+
+          var chooseItemCountOfEdit = 0
+
+          form.render(null, 'tab2Edit-table-addform');
+          form.verify({noSpecialCharacter: function(value, item){if(!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value))return '不能有特殊字符';}})
+
+          //初始化form及form中的可选项
+          form.val("tab2Edit-table-addform", {
+            "id": data.id,
+            "parameterType": data.parameterType,
+            "parameterName": data.parameterName,
+            "parameterDesc": data.parameterDesc,
+            "parameterTitle": data.parameterTitle
+          })
+          var values = resolveParameterValues(data.parameterValues)
+          chooseItemCountOfEdit += values.length
+          values.forEach(function(item,index) {
+            var chooseItem = {count:index + 1,value:item.chooseItemValue,name:item.chooseItemName}
+            $('#chooseItemLine' + (chooseItem.count - 1)).after('<div class="layui-form-item layui-form-text" id="chooseItemLine' + chooseItem.count + '"></div>')
+            view('chooseItemLine' + chooseItem.count).send($('#chooseItemTmpl').html(),chooseItem)
+          })
+
+          //监听增加预选值按钮
+          $('#tab2Edit-popform-add').on('click',function() {
+            var chooseItem = {count:++chooseItemCountOfEdit ,value:'',name:''}
+            $('#chooseItemLine' + (chooseItem.count - 1)).after('<div class="layui-form-item layui-form-text" id="chooseItemLine' + chooseItem.count + '"></div>')
+            view('chooseItemLine' + chooseItem.count).send($('#chooseItemTmpl').html(),chooseItem)
+          })
+
+          //监听解析按钮
+          $('#tab2Edit-popform-resolve').on('click',function() {
+            var str = form.val('tab2Edit-table-addform').parameterSort
+            var array = resolveParameterValues(str.replace(/\s*/g,""))
+            array.forEach(function(item,index) {
+              var chooseItem = {count:chooseItemCountOfEdit + index + 1,value:item.chooseItemValue,name:item.chooseItemName}
+              $('#chooseItemLine' + (chooseItem.count - 1)).after('<div class="layui-form-item layui-form-text" id="chooseItemLine' + chooseItem.count + '"></div>')
+              view('chooseItemLine' + chooseItem.count).send($('#chooseItemTmpl').html(),chooseItem)
+            })
+            chooseItemCountOfEdit += array.length
+          })
+          
+          //监听提交
+          form.on('submit(tab2Edit-popform-submit)', function(data){
+            var field = data.field; //获取提交的字段
+            var item = {
+              act: 'save',
+              id : data.field.id,
+              funId : layui.data('funId').funId,
+              parameterType : data.field.parameterType,
+              parameterName : data.field.parameterName,
+              parameterTitle : data.field.parameterTitle,
+              parameterDesc : data.field.parameterDesc,
+              parameterValues : formatParameterValues(field,chooseItemCountOfEdit)
+            }
+            console.log('item',item);
+            $.post(layui.setter.host + 'AppAdmin/FunsParameters.jsp',item,function(success) {
+              console.log(JSON.parse(success))
+              if(JSON.parse(success).status === 1) {
+                layer.msg('添加成功!')
+              } else {
+                layer.msg('添加失败')
+              }
+              layui.table.reload('tab2Edit-table'); //重载表格
+              layer.close(index); //执行关闭 
+            })
+          });
+        });
+      }
+    });
+    }
+  });
+
+  function formatParameterValues(field,count) {
+    console.log('field',field)
+    var parameter = '',parameterName,parameterValue
+    for(var i = 1; i <= count;i++ ) {
+      if(!field['chooseItemName'+i].trim()) continue;
+      parameterName = field['chooseItemName'+i] 
+      parameterValue = field['chooseItemValue'+i] ? field['chooseItemValue'+i] : field['chooseItemName'+i]
+      parameter += parameterName+':'+parameterValue+','
+    }
+    return parameter
+  }
+  function resolveParameterValues(values) {
+    if(!values) return [];
+    var arr = values.split(/[,]|[，]/)
+    var parameters = []
+    arr.forEach(function(item) {
+      if(!item) return false;
+      var temp = item.split(/[:]|[：]/)
+      parameters.push({chooseItemName:temp[0],chooseItemValue:temp[1]?temp[1]:temp[0]})
+    })
+
+    return parameters
+  }
+  
+  
+  //form渲染
+  $.get(layui.setter.host + 'AppAdmin/Funs.jsp',{appId:layui.data('appId').appId,funId:layui.data('funId').funId},function(data) {
+    item = JSON.parse(data).data[0]
+    form.val("function-field-table-addform", {
+      "funName": item.funName,
+      "funTitle": item.funTitle,
+      "funDesc": item.funDesc
+    })
+  })
+  
+  //form更新按钮
+  form.on('submit(f-f-popform-submit)', function(data){
+    var item = {
+      act: 'save',
+      funId : layui.data('funId').funId,
+      appId : layui.data('appId').appId,
+      appName:layui.data('appName').appName,
+      funName : data.field.funName,
+      funTitle : data.field.funTitle,
+      funDesc : data.field.funDesc
+    }
+    $.post(layui.setter.host + 'AppAdmin/Funs.jsp',item,function(success) {
+      console.log(JSON.parse(success))
+      if(JSON.parse(success).status === 1) {
+        layer.msg('更新成功!')
+      } else {
+        layer.msg('更新失败')
+      }
+    })
+    return false;
+  });
+
+  
+  //table的渲染
+  table.render({
+    elem: '#tab2Edit-table',
+    url: layui.setter.host + 'AppAdmin/FunsParameters.jsp',
+    where: {funId:layui.data('funId').funId},
+    cols: [[
+      {field: 'id', title: 'id',hide: true},
+      {field: 'parameterType',width:80, title: '类型'},
+      {field: 'parameterName', title: '属性名称', align:'center',minWidth: 100},
+      {field: 'parameterTitle', title: '属性标题',align:'center', minWidth: 100},
+      // {field: 'parameterDesc', title: '描述'},
+      {title: '操作',width:160, unresize: true, align:'center', fixed: 'right', toolbar: '#tab2Edit-table-tool'}
+    ]],
+    skin: 'line',
+    page: true,
+    limit: 20,
+    response:{statusName: 'status',statusCode:'1'},
+    height: 'full-220',
+    text: { none: '暂无数据' },
+  });
+  
+})
+
+</script>

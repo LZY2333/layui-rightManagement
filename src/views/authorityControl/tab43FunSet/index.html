@@ -1,0 +1,246 @@
+
+<title>功能&属性&匹配值</title>
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a lay-href="appControl/index"><cite>应用管理</cite></a>
+    <a lay-href="authorityControl/index"><cite id="pagedepth2"></cite></a>
+    <a lay-href="authorityControl/tab4Edit/index" id="pagedepth3Href"><cite id="pagedepth3"></cite></a>
+    <a ><cite id="pagedepth4"></cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15" id="filterList">
+    <div class="layui-card" id="tab43FunSet-buttonAdd">
+      <button class="layui-btn layuiadmin-btn-useradmin layui-btn layui-bg-green" id="tab43FilterForm-add" style="margin-left:10px;">新条件</button>
+      <script type="text/html" id="tab43FunSet-buttonAdd-tmpl">
+        {{# if(d.userType){ }}
+          <button class="layui-btn layuiadmin-btn-useradmin layui-bg-green" id="tab43FilterForm-add" style="margin-left:10px;">新条件</button>
+        {{# } else { }}
+          <button class="layui-btn layui-btn-disabled" disabled id="tab43FilterForm-add" style="margin-left:10px;">新条件</button>
+        {{# } }}
+      </script>
+    </div>
+  
+    <script type="text/html" id="filterDivTmpl">
+      <div class="layui-card-header" > 
+        <span style="font-weight:bold;font-size:18px;">{{ '条件' + d.num }}</span>
+        {{# console.log(d);}}
+        {{# if(d.userType){ }}
+          <button class="layui-btn layuiadmin-btn-useradmin layui-btn-danger" id="{{ 'tab43Filter-delete' + d.num }}" style="float:right;">删除</button>
+        {{# } else { }}
+          <button class="layui-btn layuiadmin-btn-useradmin layui-btn-danger layui-btn-disabled" disabled id="{{ 'tab43Filter-delete' + d.num }}" style="float:right;">删除</button>
+        {{# } }}
+      </div>
+      <div class="layui-card-body">
+          <table id="{{ 'tab43Filter-table' + d.num }}" lay-filter="{{ 'tab43Filter-table' + d.num }}"></table>
+      </div>
+    </script>
+
+    <script type="text/html" id="tab43FunSet-table-chooseItemTmpl">
+
+      {{# if(layui.data('tempUserType').tempUserType){ }}
+        <button class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-add-1"></i>增加匹配值</button>
+      {{# } else { }}
+        <button class="layui-btn layui-btn-normal layui-btn-xs layui-btn-disabled" disabled><i class="layui-icon layui-icon-add-1"></i>增加匹配值</button>
+      {{# } }}
+      
+    </script>
+
+    <script type="text/html" id="tab43FunSet-table-isViewAll">
+      <input {{layui.data('tempUserType').tempUserType?"":"disabled"}} type="checkbox" name="{{d.id}}" value="{{d.isViewAll}}"  title="开启" lay-filter="isViewAllLock" {{ d.isViewAll ? 'checked' : ' ' }}>
+    </script>
+
+  </div>
+</div>
+
+<script>
+  layui.use(['element','table','form','admin'], function(){
+    var element = layui.element,
+        $ = layui.$,
+        table = layui.table,
+        form = layui.form,
+        admin = layui.admin,
+        view = layui.view;
+        userType = layui.data('leixing').leixing === 'user' ? 1:layui.data('userType').userType;
+    layui.data('tempUserType', { key: 'tempUserType' ,value: userType });
+    $('#pagedepth2').text(layui.data('pagedepth').pagedepth2)
+    $('#pagedepth3').text(layui.data('pagedepth').pagedepth3)
+    $('#pagedepth4').text(layui.data('pagedepth').pagedepth4)
+    $('#pagedepth3Href').attr('lay-href',layui.data('pagedepth').pagedepth3href)
+
+
+    //添加按钮权限控制
+    view('tab43FunSet-buttonAdd').send($('#tab43FunSet-buttonAdd-tmpl').html(),{userType:userType})
+    //记录条件数
+    var max 
+    //渲染多个条件表格
+    renderFilterTables()
+    
+    //添加条件按钮绑定事件
+    $('#tab43FilterForm-add').on('click',function() {
+      var argsItem = {
+        act: 'listSave',
+        appId : layui.data('appId').appId,
+        appName : layui.data('appName').appName,
+        leixing : layui.data('leixing').leixing,
+        leixingId : layui.data('leixing').leixingId,
+        cNo : max + 1,
+        funId:layui.data('funset').funset,
+        funName:layui.data('funset').funsetName
+      }
+      $.post(layui.setter.host + 'AppAdmin/FunsArgs.jsp',argsItem,function(data) {
+        $(".classforremove").remove();
+        renderFilterTables()
+      })
+    })
+
+
+    
+
+    //渲染多个条件表格函数
+    function renderFilterTables() {
+      $.get(layui.setter.host + 'AppAdmin/FunsArgs.jsp',{act: 'query',appId : layui.data('appId').appId, funId:layui.data('funset').funset, leixing: layui.data('leixing').leixing, leixingId: layui.data('leixing').leixingId},function(res) {
+        var res = JSON.parse(res).data
+        max = Math.max.apply(Math,[...res,0]);
+        res.forEach(function(item) {
+          var filterdivId = 'filterDiv' + item 
+          var thisTableId = 'tab43Filter-table' + item
+          $('#filterList').append('<div class="layui-card classforremove" id="'+ filterdivId +'" >')
+          view(filterdivId).send($('#filterDivTmpl').html(),{num:item,userType:userType})
+
+          //table渲染
+          table.render({
+            elem: ('#'+thisTableId),
+            url: layui.setter.host + 'AppAdmin/FunsArgs.jsp',
+            where: {appId : layui.data('appId').appId, funId:layui.data('funset').funset, cNo:item, leixing: layui.data('leixing').leixing, leixingId: layui.data('leixing').leixingId},
+            cols: [[
+              {field: 'parameterName', title: '属性名称', align:'center', minWidth: 100},
+              {field: 'parameterTitle', title: '属性标题', align:'center'},
+              {field: 'parameterValue', title: '匹配值', align:'center',edit: userType?'text':''},
+              {title: '备选匹配值', width:120, align:'center', templet: '#tab43FunSet-table-chooseItemTmpl'},
+              {field: 'isViewAll', title: '全匹配', align:'center', width: 120,templet:'#tab43FunSet-table-isViewAll'},
+            ]],
+            skin: 'line',
+            limit: 60,
+            response:{statusName: 'status',statusCode:'1'},
+            height: 'full-360',
+            text: { none: '暂无数据' },
+          });
+
+          //监听table行编辑
+          table.on('edit('+ thisTableId +')', function(obj){
+            var value = obj.value? obj.value:'' //得到修改后的值
+            ,line = obj.data; //得到所在行所有键值
+
+            var strValue = value.replace(/\｛/g,"{").replace(/\｝/g,"}").replace(/\，/g,",");//将中文字符改成英文
+            
+            $.post(layui.setter.host + 'AppAdmin/FunsArgs.jsp',{act:'save',id:line.id,parameterValue:strValue,isViewAll:line.isViewAll},function(success) {
+              if(JSON.parse(success).status === 1) {
+                layer.msg('修改成功!')
+              } else {
+                layer.msg('修改失败!')
+                layui.table.reload(thisTableId); //重载表格
+              }
+            })
+          });
+
+          //用于解析备选项的函数
+          function resolveParameterValues(values) {
+            if(!values) return [];
+            var arr = values.split(/[,]|[，]/)
+            var parameters = []
+            arr.forEach(function(item) {
+              if(!item) return false;
+              var temp = item.split(/[:]|[：]/)
+              parameters.push({chooseItemName:temp[0],chooseItemValue:temp[1]?temp[1]:temp[0]})
+            })
+
+            return parameters
+          }
+
+          //监听table增加匹配值按钮
+          table.on('tool('+ thisTableId +')', function(obj){
+            var line = obj.data;
+            admin.popup({
+              title: '增加匹配值'
+              ,area: ['500px', '300px']
+              ,id: 'tab43Filter-popup-chooseItems'
+              ,success: function(layero, index){
+                var thisFunId = line.funId
+                var parameterValue = line.parameterValue
+                $.get(layui.setter.host + 'AppAdmin/FunsParameters.jsp',{funId:thisFunId,parameterName:line.parameterName},function(res) {
+                  
+                  var str = JSON.parse(res).data[0].parameterValues
+                  var chooseItems = resolveParameterValues(str)
+                  
+                  view('tab43Filter-popup-chooseItems').render('authorityControl/tab43FunSet/popupChooseItemAdd',chooseItems).done(function(){
+                    form.render()
+                  })
+                  //点击添加匹配值
+                  form.on('submit(tab43Filter-chooseItems-submit)', function(data){
+                    var chooseItemObjs = data.field
+                    var chooseItemStr = ''
+                    //获取原本的值
+                    chooseItemStr = parameterValue ? parameterValue :''
+                    //拼上增加的值成字符串
+                    if(chooseItemStr.charAt(chooseItemStr.length - 1) != ','&&chooseItemStr !='') chooseItemStr = chooseItemStr + ','
+                    for(var prop in chooseItemObjs) {
+                      chooseItemStr += chooseItemObjs[prop] + ','
+                    }
+                    console.log('chooseItemStr2',chooseItemStr);
+                    $.post(layui.setter.host + 'AppAdmin/FunsArgs.jsp',{act:'save',id:line.id,parameterValue:chooseItemStr,isViewAll:0},function(success) {
+                      if(JSON.parse(success).status === 1) {
+                        layer.msg('添加成功!')
+                      } else {
+                        layer.msg('添加失败')
+                      }
+                      
+                      layui.table.reload(thisTableId); //重载表格
+                      layer.close(index); //执行关闭
+                    })
+                    
+                    
+                  })
+                })
+              }
+            });
+          });
+
+          
+
+          //监听isViewAll
+          form.on('checkbox(isViewAllLock)', function(obj){
+            var item = {
+                act: 'save',
+                id: this.name,
+                isViewAll: obj.elem.checked  ? '1' : '0',
+              }
+            $.post(layui.setter.host + 'AppAdmin/FunsArgs.jsp',item,function(success) {
+              if(JSON.parse(success).status === 1) layer.msg('修改成功!')
+              else {layer.msg('修改失败');layui.table.reload(thisTableId);}
+              
+            })
+          });
+
+          //删除条件按钮绑定事件
+          $('#tab43Filter-delete' + item).on('click',function() {
+            var queryItem = { 
+              act:'listDelete',
+              appId:layui.data('appId').appId,
+              funId:layui.data('funset').funset,
+              cNo: item,
+              leixing:layui.data('leixing').leixing,
+              leixingId:layui.data('leixing').leixingId
+            }
+            $.post(layui.setter.host + 'AppAdmin/FunsArgs.jsp',queryItem,function(data) {
+              $(".classforremove").remove();
+              renderFilterTables()
+            })
+          })
+        })
+      })
+    }
+  })
+</script>

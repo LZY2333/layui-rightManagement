@@ -1,0 +1,319 @@
+<style>
+  .layadmin-homepage-list-inline .layui-btn{
+    font-size: .9em;
+    line-height: 1.42857;
+    vertical-align: middle;
+    height: auto;
+    padding: 4px 7px;
+    margin-left: 0px;
+    margin: 0 10px 10px 0;
+  }
+</style>
+
+<title>功能字段</title>
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a lay-href="appControl/index"><cite>应用管理</cite></a>
+    <a lay-href="authorityControl/index"><cite id="pagedepth2"></cite></a>
+    <a ><cite id="pagedepth3"></cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md4">    
+      <div class="layui-card">
+        <div class="layui-card-header">
+          基本信息
+        </div>
+        <div class="layui-card-body">
+          <div class="layui-row layui-col-space10">
+            <form class="layui-form" action="" lay-filter="role-authority-table-addform">
+              <div style="margin: 0;" class="layui-form-item">
+                <label class="layui-form-label" style="width: 42px;">姓名</label>
+                <div class="layui-input-block" style="margin-left: 78px;">
+                  <input type="text" name="username" disabled="disabled" style="border: none"  autocomplete="off" class="layui-input">
+                  <!-- <input type="text" name="username" disabled="disabled" style="border: none" value="{{ d.params.username || '' }}"  autocomplete="off" class="layui-input"> -->
+                </div>
+              </div>
+              <div style="margin: 0;" class="layui-form-item">
+                <label class="layui-form-label" style="width: 42px;">工号</label>
+                <div class="layui-input-block" style="margin-left: 78px;">
+                  <input type="text" name="userid" disabled="disabled" style="border: none"  autocomplete="off" class="layui-input">
+                  <!-- <input type="text" name="id" disabled="disabled" style="border: none" value="{{ d.params.id || '' }}" autocomplete="off" class="layui-input"> -->
+                </div>
+              </div>
+              <div style="margin: 0;" class="layui-form-item">
+                <label class="layui-form-label" style="width: 42px;">事业部</label>
+                <div class="layui-input-block" style="margin-left: 78px;">
+                  <input type="text" name="cj10txt" disabled="disabled" style="border: none"  autocomplete="off" class="layui-input">
+                  <!-- <input type="text" name="phone" disabled="disabled" style="border: none" value="{{ d.params.phone || '' }}"  autocomplete="off" class="layui-input"> -->
+                </div>
+              </div>
+              <div style="margin: 0;" class="layui-form-item">
+                <label class="layui-form-label" style="width: 42px;">工厂</label>
+                <div class="layui-input-block" style="margin-left: 78px;">
+                  <input type="text" name="cj20txt" disabled="disabled" style="border: none"  autocomplete="off" class="layui-input">
+                  <!-- <input type="text" name="jointime" disabled="disabled" style="border: none" value="{{ d.params.jointime || '' }}"  autocomplete="off" class="layui-input"> -->
+                </div>
+              </div>
+              <div style="margin: 0;" class="layui-form-item">
+                <label class="layui-form-label" style="width: 42px;">部门</label>
+                <div class="layui-input-block" style="margin-left: 78px;">
+                  <input type="text" name="cj30txt" disabled="disabled" style="border: none"  autocomplete="off" class="layui-input">
+                  <!-- <input type="text" name="jointime" disabled="disabled" style="border: none" value="{{ d.params.jointime || '' }}"  autocomplete="off" class="layui-input"> -->
+                </div>
+              </div>
+              <div style="margin: 0;" class="layui-form-item">
+                <label class="layui-form-label" style="width: 42px;">科室</label>
+                <div class="layui-input-block" style="margin-left: 78px;">
+                  <input type="text" name="cj40txt" disabled="disabled" style="border: none"  autocomplete="off" class="layui-input">
+                  <!-- <input type="text" name="jointime" disabled="disabled" style="border: none" value="{{ d.params.jointime || '' }}"  autocomplete="off" class="layui-input"> -->
+                </div>
+              </div>
+              <div style="margin: 0;" class="layui-form-item">
+                <label class="layui-form-label" style="width: 42px;">班组</label>
+                <div class="layui-input-block" style="margin-left: 78px;">
+                  <input type="text" name="cj50txt" disabled="disabled" style="border: none"  autocomplete="off" class="layui-input">
+                  <!-- <input type="text" name="jointime" disabled="disabled" style="border: none" value="{{ d.params.jointime || '' }}"  autocomplete="off" class="layui-input"> -->
+                </div>
+              </div>
+              <div style="margin: 0;" class="layui-form-item">
+                <label class="layui-form-label" style="width: 42px;">拉</label>
+                <div class="layui-input-block" style="margin-left: 78px;">
+                  <input type="text" name="cj60txt" disabled="disabled" style="border: none"  autocomplete="off" class="layui-input">
+                  <!-- <input type="text" name="jointime" disabled="disabled" style="border: none" value="{{ d.params.jointime || '' }}"  autocomplete="off" class="layui-input"> -->
+                </div>
+              </div>
+              <div style="margin: 0;" class="layui-form-item">
+                <label class="layui-form-label" style="width: 60px;padding-left: 0">工作地点</label>
+                <div class="layui-input-block" style="margin-left: 78px;">
+                  <input type="text" name="gzdd" disabled="disabled" style="border: none"  autocomplete="off" class="layui-input">
+                  <!-- <input type="text" name="ip" disabled="disabled" style="border: none" value="{{ d.params.ip || '' }}"  autocomplete="off" class="layui-input"> -->
+                </div>
+              </div>
+            </form>             
+          </div>
+        </div>
+      </div>
+     
+      
+      <div class="layui-card">
+        <div class="layui-card-body" >
+          <i class="layui-icon layui-icon-tips " style="font-size: 22px; color:#FFB800;"></i>功能设置后会覆盖角色相应功能权限。
+        </div>
+      </div>
+    </div>
+    <div class="layui-col-md8">
+
+      <div class="layui-card">
+        <div class="layui-card-header">
+          角色
+          <button class="layui-btn layuiadmin-btn-useradmin layui-btn-xs layui-bg-gray" id="tab4Edit-role-add" style="margin-left:10px;">添加</button>
+        </div>
+        <div class="layui-card-body">
+          <ul id="tab4EditBadge" class="layadmin-homepage-list-inline" style="padding: 0;margin: 0"></ul>
+          <script type="text/html" id="tab4EditBadgeContent" >
+            {{#  layui.each(d, function(index, item){ }}
+            <a href="javascript:;" class="layui-btn layui-btn-primary" value="{{ item.roleId }}">{{ item.sysRoles ? item.sysRoles.roleTitle : ''}}<span class="layui-badge layui-bg-gray">X</span></a>
+            {{#  }); }}
+            {{#  if(d.length === 0){ }}
+              无数据
+            {{#  } }}
+          </script>
+        </div>
+      </div>
+
+      <div class="layui-card">
+        <div class="layui-card-header">
+          功能
+        </div>
+        <div class="layui-card-body" style="padding: 15px 15px;">
+          <table id="tab4EditTable" lay-filter="tab4EditTable"></table>
+
+          <script type="text/html" id="tab4EditTable-state">
+            <input type="checkbox" name="{{d.funId}}" alt="{{d.funName}}" value="{{d.funEnable}}"  title="启用" lay-filter="funEnableLock" {{d.funEnable?'checked':''}}>
+          </script>
+
+          <script type="text/html" id="tab4EditTable-tool">
+            <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit" ><i class="layui-icon layui-icon-edit"></i>设置</a>
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+layui.use(['element','table','admin','form'], function(){
+  var element = layui.element,
+      $ = layui.$,
+      form = layui.form,
+      table = layui.table,
+      admin = layui.admin,
+      view = layui.view,
+      router = layui.router();
+  $('#pagedepth2').text( layui.data('pagedepth').pagedepth2)
+  $('#pagedepth3').text( layui.data('pagedepth').pagedepth3)
+  //form渲染
+  $.get(layui.setter.host + 'AppAdmin/Users.jsp',{userid:layui.data('userid').userid},function(data) {
+    item = JSON.parse(data).data[0]
+    form.val("role-authority-table-addform", {
+      "userid": item.userid,
+      "username": item.username,
+      "cj10txt": item.cj10txt||'--',
+      "cj20txt": item.cj20txt||'--',
+      "cj30txt": item.cj30txt||'--',
+      "cj40txt": item.cj40txt||'--',
+      "cj50txt": item.cj50txt||'--',
+      "cj60txt": item.cj60txt||'--',
+      "gzdd": item.gzdd||'--',
+    })
+  })
+  var roleList
+  //Role标签渲染
+  setRoleTags()
+  function setRoleTags() {
+    $.get(layui.setter.host + 'AppAdmin/UserRoles.jsp',{appId:layui.data('appId').appId,empnum:layui.data('userid').userid},function(data) {
+      roleList = JSON.parse(data).data
+      console.log('roleList',roleList);
+      $('#tab4EditBadge').empty()
+      view('tab4EditBadge').send($('#tab4EditBadgeContent').html(),roleList).done(function(){})
+
+      //Role标签删除
+      $('.layui-badge.layui-bg-gray').on('click',function() {
+        var _this = $(this).parent()
+        $.post(layui.setter.host + 'AppAdmin/UserRoles.jsp',{act: 'delete',appId : layui.data('appId').appId,empnum : layui.data('userid').userid,roleId: _this.attr('value')},function(data) {
+          var completeObj = JSON.parse(data)
+          console.log('completeObj',completeObj);
+          if(completeObj.status === 1) layer.msg(completeObj.message)
+          else layer.msg(completeObj.message)
+          setRoleTags()
+        })
+        _this.remove()
+      })
+    })
+  }
+  
+  
+  //Role标签增加
+  $('#tab4Edit-role-add').on('click', function(){
+    admin.popup({
+      title: '添加角色'
+      ,area: ['486px', '370px']
+      ,id: 'tab4Edit-role-addform-content'
+      ,success: function(layero, index){
+        var _id = this.id
+        $.get(layui.setter.host + 'AppAdmin/Roles.jsp',{appId:layui.data('appId').appId},function(data) {
+          items = JSON.parse(data).data
+          items.forEach((item) => {
+            if(roleList.find(function(value) { return value.roleId === item.roleId })) {
+              item.checked = true
+            } else {
+              item.checked = false
+            }
+          })
+          console.log('items',items)
+          view(_id).render('authorityControl/tab4Edit/popupRoleAdd',items).done(function(){
+          form.render(null, 'tab4Edit-table-addform');
+
+          //监听checkbox
+          form.on('checkbox(tab4Edit-addform-checkbox)', function(data){
+            if(data.elem.checked) {
+              $.post(layui.setter.host + 'AppAdmin/UserRoles.jsp',{act: 'save',appId : layui.data('appId').appId,empnum : layui.data('userid').userid,roleId: data.value,gangwei: layui.data('gangwei').gangwei},function(data) {
+                var completeObj = JSON.parse(data)
+                setRoleTags()
+                if(completeObj.status === 1) layer.msg('添加成功!') 
+                else layer.msg(completeObj.message)
+                
+              })
+            } else {
+              $.post(layui.setter.host + 'AppAdmin/UserRoles.jsp',{act: 'delete',appId : layui.data('appId').appId,empnum : layui.data('userid').userid,roleId: data.value},function(data) {
+                var completeObj = JSON.parse(data)
+                setRoleTags()
+                if(completeObj.status === 1) layer.msg(completeObj.message)
+                else layer.msg(completeObj.message)
+              })
+            }
+          });
+        });
+        })
+      }
+    });
+  });
+
+  //table的渲染
+  table.render({
+    elem: '#tab4EditTable',
+    url: layui.setter.host + 'AppAdmin/Funs.jsp',
+    where: {appId:layui.data('appId').appId,leixing:layui.data('leixing').leixing,leixingId:layui.data('leixing').leixingId},
+    cols: [[
+      {field: 'funEnable',title: '状态',width: 120, align:'center',templet:'#tab4EditTable-state'},
+      {field: 'funId',title: 'ID', align:'center',hide:true},
+      {field: 'funName', title: '功能' ,align:'center',},
+      {field: 'funTitle', title: '名称',  align:'center',minWidth: 100},
+      {title: '操作',width:100, unresize: true, align:'center', fixed: 'right', toolbar: '#tab4EditTable-tool'}
+    ]],
+    limit:100,
+    skin: 'line',
+    response:{statusName: 'status',statusCode:'1'},
+    height: 'full-340',
+    text: { none: '暂无数据' },
+  });
+  //监听工具条
+  table.on('tool(tab4EditTable)', function(obj){
+    console.log(table.cache.tab4EditTable);
+    var data = obj.data;
+    if(!data.funEnable){
+      layer.msg('请先启用该功能') 
+      return false
+    }
+    layui.data('funset', {key: 'funset',value: data.funId});
+    layui.data('funset', {key: 'funsetName',value: data.funName});
+    layui.data('pagedepth', {key: 'pagedepth4',value: data.funTitle});
+    layui.data('pagedepth', {key: 'pagedepth3href',value: 'authorityControl/tab4Edit/index'});
+    location.hash = '/authorityControl/tab43FunSet/index';
+  });
+  //监听table中form元素
+  form.on('checkbox(funEnableLock)', function(obj){
+    //layui form元素的点击不会实时改变其数据，只能自己手动改。用于该行设置按钮的判断
+    var itemFunEnable = table.cache.tab4EditTable.find(function(item) {
+      return item.funId == obj.elem.name
+    }).funEnable
+    itemFunEnable = itemFunEnable == 0 ? 1 : 0
+    table.cache.tab4EditTable.find(function(item) {
+      return item.funId == obj.elem.name
+    }).funEnable = itemFunEnable
+    
+    if(obj.elem.checked) {
+      var item = {
+        act: 'saveLeixingFuns',
+        appId : layui.data('appId').appId,
+        appName : layui.data('appName').appName,
+        leixing : layui.data('leixing').leixing,
+        leixingId : layui.data('leixing').leixingId,
+        funId: obj.elem.name,
+        funName: obj.elem.alt
+      }
+      $.post(layui.setter.host + 'AppAdmin/Funs.jsp',item,function(success) {
+        if(JSON.parse(success).status === 1) layer.msg('修改成功!')
+        else layer.msg('修改失败')
+      })
+    } else {
+      var item = {
+        act: 'deleteLeixingFuns',
+        appId : layui.data('appId').appId,
+        leixing : layui.data('leixing').leixing,
+        leixingId : layui.data('leixing').leixingId,
+        funId: obj.elem.name
+      }
+      $.post(layui.setter.host + 'AppAdmin/Funs.jsp',item,function(success) {
+        if(JSON.parse(success).status === 1) layer.msg('修改成功!')
+        else layer.msg('修改失败')
+      })
+    }
+  });
+})
+
+</script>

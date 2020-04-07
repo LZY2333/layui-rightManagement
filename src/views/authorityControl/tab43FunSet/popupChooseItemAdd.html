@@ -1,0 +1,19 @@
+<form class="layui-form" action=""  lay-filter="tab43Filter-chooseItems-form">
+  <!-- <div class="layui-form-item">
+    <input name="parameterValue" class="layui-input" value="parameterValue"></input>
+  </div> -->
+  <div class="layui-form-item">
+      <script type="text/html" template>
+        {{# console.log(d.params);}}
+        {{#  layui.each(d.params, function(index, item){ }}
+            <input type="checkbox" name="chooseItem[{{index}}]" value="{{ item.chooseItemValue }}" title="{{item.chooseItemName}}">
+        {{#  }); }}
+        {{#  if(d.params.length === 0){ }}
+          无预设的匹配值
+        {{#  } }} 
+      </script>
+  </div>
+  <div class="layui-form-item" style="margin-bottom: 0px;">
+      <input type="button" lay-submit lay-filter="tab43Filter-chooseItems-submit" value="保存" class="layui-btn" />
+  </div>
+</form>

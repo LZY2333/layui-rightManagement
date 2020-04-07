@@ -1,0 +1,26 @@
+<form class="layui-form" action="" lay-filter="function-field-table-addform">
+  <div class="layui-form-item">
+    <label class="layui-form-label" style="width: 70px;"><span style="color:#FF5722;font-family: SimSun;font-size: 14px;margin-right: 6px;">*</span>功能标题</label>
+    <div class="layui-input-block" style="margin-left: 100px;">
+      <input type="text" name="funTitle" required  lay-verify="required" placeholder="请输入功能标题" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label" style="width: 70px;"><span style="color:#FF5722;font-family: SimSun;font-size: 14px;margin-right: 6px;">*</span>功能名称</label>
+    <div class="layui-input-block" style="margin-left: 100px;">
+      <input type="text" name="funName" required  lay-verify="required" placeholder="请输入功能名称" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+  <div class="layui-form-item layui-form-text">
+    <label class="layui-form-label"  style="width: 41px;">描述</label>
+    <div class="layui-input-block" style="margin-left: 100px;">
+      <textarea name="funDesc" placeholder="请输入描述" class="layui-textarea"></textarea>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label" style="width: 70px;"></label>
+    <div class="layui-input-inline">
+      <input type="button" lay-submit lay-filter="f-f-popform-submit" value="确认" class="layui-btn">
+    </div>
+  </div>
+</form>

@@ -1,0 +1,762 @@
+<style>
+.layui-table-page{
+  padding-left: 25%;
+}
+.layui-table-cell { padding: 0}
+
+/* 防止下拉框的下拉列表被隐藏---必须设置--- */        
+ [data-field=typ] >.layui-table-cell { overflow: visible !important; } 
+/* 使得下拉框与单元格刚好合适 */       
+td .layui-form-select{
+	margin-top: -10px;
+	/* margin-left: -15px;
+	margin-right: -15px; */
+}  
+</style>
+
+<title>权限控制</title>
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb">
+    <a lay-href="appControl/index"><cite>应用管理</cite></a>
+    <a ><cite id="pagedepth2">应用信息</cite></a>
+  </div>
+</div>
+
+<div class="layui-tab layui-tab-brief layui-card " lay-filter="authTab" style="margin-bottom: 0px;">
+  <ul class="layui-tab-title layui-row" id="tabTitle">
+    <script type="text/html" id="tabTitles">
+      {{# if(layui.data('userType').userType){ }}
+        <li lay-id="tab1" class="layui-col-md-offset3 layui-col-sm-offset3">应用信息</li>
+        <li lay-id="tab2">功能属性</li> 
+        <li lay-id="tab3">模板角色</li>
+        <li lay-id="tab4">用户权限</li>
+        <li lay-id="tab5">高级用户</li>  
+      {{# } else { }}
+        <li lay-id="tab1" class="layui-col-md-offset4 layui-col-sm-offset4">应用信息</li>
+        <li lay-id="tab2">功能属性</li> 
+        <li lay-id="tab3">模板角色</li>
+        <li lay-id="tab4">用户权限</li>
+      {{# } }}
+      
+    </script>
+  </ul>
+
+  
+
+  <div class="layui-tab-content layui-row" >
+    <div class="layui-tab-item layui-col-md9 layui-col-md-offset1" >
+      <script type="text/html" template>
+
+      <form class="layui-form" action="" style="margin-top: 48px;height: 530px;" lay-filter="app-form">
+        <div class="layui-form-item">
+          <label class="layui-form-label">应用名称</label>
+          <div class="layui-input-inline">
+            <input type="text" name="appName" required  lay-verify="required" placeholder="请输入应用名称" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label"><span style="color:#FF5722;font-family: SimSun;font-size: 14px;margin-right: 6px;">*</span>应用标题</label>
+          <div class="layui-input-inline">
+            <input type="text" name="appTitle" required  lay-verify="required" placeholder="请输入应用标题" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label"><span style="color:#FF5722;font-family: SimSun;font-size: 14px;margin-right: 6px;">*</span>地址</label>
+          <div class="layui-input-block">
+            <input type="text" name="appUrl" required  lay-verify="required" placeholder="请输入应用地址" autocomplete="off" class="layui-input">
+          </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+          <label class="layui-form-label">描述</label>
+          <div class="layui-input-block">
+            <textarea name="appDesc" placeholder="请输入应用描述" class="layui-textarea"></textarea>
+          </div>
+        </div>
+        <div class="layui-form-item" id="tabAuthItemForTip1" >
+          <label class="layui-form-label">状态</label>
+          <div class="layui-input-block layui-inline " style="margin-left:0;" id="authRadio">
+            <input type="radio" name="status" value="0" title="保密" >
+            <input type="radio" name="status" value="1" title="公开" >
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-input-block" id="tab1-buttonUpdate">
+            {{# if(layui.data('userType').userType){ }}
+              <button class="layui-btn" lay-submit lay-filter="tabForm1">立即更新</button>
+            {{# } else { }}
+              <button class="layui-btn layui-btn-disabled" lay-submit lay-filter="tabForm1" disabled>立即更新</button>
+            {{# } }}
+          </div>
+        </div>
+      </form>
+      </script>
+    </div>
+
+    <div class="layui-tab-item ">
+      <div class="layui-fluid" >
+        <div class="layui-card">
+          <div class="layui-card-body">
+            <div style="padding-bottom: 10px;" id="tab2-buttonadd"></div>
+            <script type="text/html" id="tab2-buttonadd-tmpl" >
+              {{# if(d.userType){ }}
+                <button class="layui-btn layuiadmin-btn-useradmin" id="function-field-add">添加</button>
+              {{# } else { }}
+                <button class="layui-btn layuiadmin-btn-useradmin layui-btn-disabled" id="function-field-add" disabled>添加</button>
+              {{# } }}
+            </script>
+
+            <table id="function-field-table" lay-filter="function-field-table"></table>
+            <script type="text/html" id="function-field-table-tool" >
+              
+              <button class="layui-btn layui-btn-normal layui-btn-xs " lay-event="edit" ><i class="layui-icon layui-icon-edit"></i>设置</button>
+              {{# if(layui.data('userType').userType){ }}
+                <button class="layui-btn layui-btn-danger layui-btn-xs " lay-event="del" ><i class="layui-icon layui-icon-delete"></i>删除</button>
+              {{# } else { }}
+                <button class="layui-btn layui-btn-danger layui-btn-xs layui-btn-disabled"  disabled><i class="layui-icon layui-icon-delete"></i>删除</button>
+              {{# } }}
+            </script>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layui-tab-item">
+      <div class="layui-fluid" >
+        <div class="layui-card">
+
+          <div class="layui-card-body">
+            <div style="padding-bottom: 10px;" id="tab3-buttonadd">
+              <script type="text/html" id="tab3-buttonadd-tmpl" >
+                {{# if(d.userType){ }}
+                  <button class="layui-btn layuiadmin-btn-useradmin" id="template-role-add">添加</button>
+                {{# } else { }}
+                  <button class="layui-btn layuiadmin-btn-useradmin layui-btn-disabled" id="template-role-add" disabled>添加</button>
+                {{# } }}
+              </script>
+            </div>
+            <table id="template-role-table" lay-filter="template-role-table"></table>
+            <script type="text/html" id="template-role-table-tool">
+              <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>设置</a>
+            </script>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layui-tab-item">
+      <div class="layui-fluid">
+        <div class="layui-card">
+          <div id="role-authority-formlist" class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="role-authority-formlist" style="padding:0px;">
+            <div class="layui-form-item" >
+              <div class="layui-inline">
+                <label class="layui-form-label" style="width: 50px; padding:5px 10px;">工号</label>
+                <div class="layui-input-block" style="margin-left: 70px; min-height:30px;">
+                  <input type="text" name="userid" placeholder="请输入" autocomplete="off"  class="layui-input" style="height: 30px;">
+                </div>
+              </div>
+              <div class="layui-inline">
+                <label class="layui-form-label" style="width: 50px; padding:5px 10px;">姓名</label>
+                <div class="layui-input-block" style="margin-left: 70px; min-height:30px;">
+                  <input type="text" name="username" placeholder="请输入" autocomplete="off" class="layui-input" style="height: 30px;">
+                </div>
+              </div>
+              <div class="layui-inline">
+                <label class="layui-form-label" style="width: 50px; padding:5px 10px;">事业部</label>
+                <div class="layui-input-block" style="margin-left: 70px; min-height:30px;">
+                  <input type="text" name="cj10txt" placeholder="请输入" autocomplete="off" class="layui-input" style="height: 30px;">
+                </div>
+              </div>
+              <div class="layui-inline">
+                <label class="layui-form-label" style="width: 50px; padding:5px 10px;">部门</label>
+                <div class="layui-input-block" style="margin-left: 70px; min-height:30px;">
+                  <input type="text" name="cj30txt" placeholder="请输入" autocomplete="off" class="layui-input" style="height: 30px;">
+                </div>
+              </div>
+              <div class="layui-inline">
+                <button class="layui-btn layuiadmin-btn-useradmin" lay-submit id="role-authority-search" lay-filter="role-authority-search" style="height:30px;line-height: 30px;">
+                  <i class="layui-icon layui-icon-search layuiadmin-button-btn " ></i>
+                </button>
+              </div>
+              
+            </div>
+
+          </div>
+
+          <div class="layui-card-body">
+            <div class="layui-inline" style="padding-bottom: 10px;">
+              <button class="layui-btn layuiadmin-btn-useradmin" data-type="add" id="role-authority-add">添加</button>
+            </div>
+            <div class="layui-inline" style="padding-bottom: 10px;padding-left: 40px;">
+              <button class="layui-btn layuiadmin-btn-useradmin" data-type="download" id="role-authority-download">下载Excel</button>
+            </div>
+
+            <table id="role-authority-table" lay-filter="role-authority-table"></table>
+            <script type="text/html" id="role-authority-table-tool">
+              <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+              <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete "></i>删除</a>
+            </script>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layui-tab-item">
+      <div class="layui-fluid" >
+        <div class="layui-card">
+
+          <div class="layui-card-body">
+            <div style="padding-bottom: 10px;">
+              <button class="layui-btn layuiadmin-btn-useradmin" id="super-admin-add">添加</button>
+            </div>
+            <table id="super-admin-table" lay-filter="super-admin-table"></table>
+
+            <script type="text/html" id="super-admin-table-tool">
+              <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon layui-icon-delete"></i>删除</a>
+            </script>
+
+            <script type="text/html" id="super-admin-table-authAdmin">
+              <input type="checkbox" name="{{d.id}}" value="{{d.authAdmin}}"  title="启用" lay-filter="authAdminLock" {{ d.authAdmin ? 'checked' : ' ' }}>
+            </script>
+            
+            <script type="text/html" id="super-admin-table-appAdmin">
+              <input type="checkbox" name="{{d.id}}" value="{{d.appAdmin}}" title="启用" lay-filter="appAdminLock" {{ d.appAdmin ? 'checked' : ' ' }}>
+            </script>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  
+// useradmin
+layui.use(['element','form','admin','table'], function(){
+  var element = layui.element,
+      form = layui.form,
+      $ = layui.$,
+      admin = layui.admin,
+      view = layui.view,
+      table = layui.table,
+      router = layui.router();
+  
+  view('tabTitle').send($('#tabTitles').html(),layui.data('userType').userType)
+  element.on('tab(authTab)',function(data) {
+    layui.data('authTab', {key: 'authTab',value: 'tab' + (data.index+1)});
+    layui.data('pagedepth', {key: 'pagedepth2',value: this.innerText});
+    $('#pagedepth2').text(this.innerText)
+      admin.resizeTable()
+    })
+  element.tabChange('authTab', layui.data('authTab').authTab); //根据路由authTab参数跳转tab视图
+  
+
+  //TAB面板1相关--------------------------------------------------------------------------------
+  $.get(layui.setter.host + 'AppAdmin/Apps.jsp',{appId:layui.data('appId').appId},function(data) {
+    item = JSON.parse(data).data[0]
+    form.val("app-form", {
+      "appName": item.appName,
+      "appTitle": item.appTitle,
+      "status": item.appStatus == 'public'? '1' : '0',
+      "appUrl": item.appUrl,
+      "appDesc": item.appDesc
+    })
+  })
+  form.on('submit(tabForm1)', function(data){
+    var item = {
+      act: 'save',
+      appId : layui.data('appId').appId,
+      appDesc : data.field.appDesc,
+      appName : data.field.appName,
+      appTitle : data.field.appTitle,
+      appUrl : data.field.appUrl,
+      appStatus : data.field.appStatus == '1' ? 'public' : 'private',
+    }
+    $.post(layui.setter.host + 'AppAdmin/Apps.jsp',item,function(success) {
+      console.log(JSON.parse(success))
+      if(JSON.parse(success).status === 1) {
+        layer.msg('更新成功!')
+      } else {
+        layer.msg('更新失败')
+      }
+    })
+    return false;
+  });
+
+  //TAB面板2相关--------------------------------------------------------------------------------
+  table.render({
+    elem: '#function-field-table',
+    url: layui.setter.host + 'AppAdmin/Funs.jsp',
+    where: {appId:layui.data('appId').appId},
+    cols: [[
+      {field: 'funTitle',align:'center',width:160, title: '功能标题', minWidth: 100,sort: true},
+      {field: 'funName', align:'center', title: '功能名称',sort: true},
+      {title: '操作', width:160,unresize: true, align:'center',  toolbar: '#function-field-table-tool',fixed: 'right'}
+    ]],
+    page: true,
+    limit: 20,
+    skin: 'line',
+    response:{statusName: 'status',statusCode:'1'},
+    height: 'full-280',
+    text: { none: '暂无数据' },
+  });
+  //添加按钮权限控制
+  view('tab2-buttonadd').send($('#tab2-buttonadd-tmpl').html(),{userType:layui.data('userType').userType})
+  //监听工具条
+  table.on('tool(function-field-table)', function(obj){
+    var data = obj.data;
+
+    if(obj.event === 'del'){
+      layer.confirm('是否确认删除?', function(index){
+        $.post(layui.setter.host + 'AppAdmin/Funs.jsp',{act: 'deleteByFunId',funId: data.funId,appId: layui.data('appId').appId},function(success) {
+          console.log('tab2table',JSON.parse(success))
+          if(JSON.parse(success).status === 1) layer.msg('删除成功!')
+          else layer.msg('删除失败')
+          obj.del();
+          layer.close(index);
+        })
+      });
+    } else if(obj.event === 'edit'){
+      layui.data('funId', {key: 'funId',value: data.funId});
+      layui.data('pagedepth', {key: 'pagedepth3',value: data.funTitle});
+      location.hash = '/authorityControl/tab2Edit/index';
+    }
+  });
+  //table的左上角add增加按钮
+  $('#function-field-add').on('click', function(){
+    admin.popup({
+      title: '添加功能'
+      ,area: ['500px', '370px']
+      ,id: 'function-field-addform-content'
+      ,success: function(layero, index){
+        view(this.id).render('authorityControl/popup/tab2FunctionFieldAddForm').done(function(){
+          form.render(null, 'function-field-table-addform');
+
+          //监听提交
+          form.on('submit(f-f-popform-submit)', function(data){
+            var field = data.field; //获取提交的字段
+            $.post(layui.setter.host + 'AppAdmin/Funs.jsp',{act:'save',appId:layui.data('appId').appId,appName:layui.data('appName').appName,funName:field.funName,funTitle:field.funTitle,funDesc:field.funDesc},function(success) {
+              console.log(success)
+              layui.table.reload('function-field-table'); //重载表格
+              layer.close(index); //执行关闭
+            });
+
+          });
+        });
+      }
+    });
+  });
+  //TAB面板3相关--------------------------------------------------------------------------------
+  table.render({
+    elem: '#template-role-table',
+    url: layui.setter.host + 'AppAdmin/Roles.jsp', //模拟接口
+    where: {appId:layui.data('appId').appId},
+    cols: [[
+      {field: 'roleId', title: '角色ID', hide: true},
+      {field: 'roleEnable',title: '状态', width:100, align:'center',templet: function(d){
+          var str = d.roleEnable ? '<span class="layui-badge layui-bg-green">已启用</span>' : '<span class="layui-badge layui-bg-orange">未启用</span>'
+          return str
+        }
+      },
+      {field: 'roleTitle',align:'center', title: '角色标题',sort: true},
+      {field: 'roleName',align:'center', title: '角色名称',sort: true},
+      {field: 'roleDesc',align:'center', title: '描述'},
+      {title: '操作',width:160, unresize: true, align:'center', toolbar: '#template-role-table-tool',fixed: 'right'}
+    ]],
+    page: true,
+    limit: 20,
+    skin: 'line',
+    response:{statusName: 'status',statusCode:'1'},
+    height: 'full-280',
+    text: { none: '暂无数据' },
+  });
+  //按钮权限控制
+  view('tab3-buttonadd').send($('#tab3-buttonadd-tmpl').html(),{userType:layui.data('userType').userType})
+  //监听工具条
+  table.on('tool(template-role-table)', function(obj){
+    var data = obj.data;
+    if(obj.event === 'del'){
+      layer.confirm('是否确认删除?', function(index){
+        $.post(layui.setter.host + 'AppAdmin/Roles.jsp',{act: 'delete',roleId: data.roleId},function(success) {
+          console.log(JSON.parse(success))
+          if(JSON.parse(success).status === 1) layer.msg('删除成功!')
+          else layer.msg('删除失败')
+          obj.del();
+          layer.close(index);
+        })
+      });
+    } else if(obj.event === 'edit'){
+      layui.data('roleId', {key: 'roleId',value: data.roleId});
+      layui.data('pagedepth', {key: 'pagedepth3',value: data.roleTitle});
+      layui.data('leixing', {key: 'leixing',value: 'role'});
+      layui.data('leixing', {key: 'leixingId',value: data.roleId});
+      location.hash = '/authorityControl/tab3Edit/index';
+    }
+  });
+  //table的左上角add增加按钮
+  $('#template-role-add').on('click', function(){
+    admin.popup({
+      title: '新角色'
+      ,area: ['500px', '420px']
+      ,id: 'template-role-addform-content'
+      ,success: function(layero, index){
+        view(this.id).render('authorityControl/popup/tab3TemplateRoleAddForm').done(function(){
+          form.render(null, 'template-role-table-addform');
+
+          //监听提交
+          form.on('submit(t-r-popform-submit)', function(data){
+            var item = {
+              act: 'save',
+              appId : layui.data('appId').appId,
+              roleEnable : data.field.roleEnable,
+              roleTitle : data.field.roleTitle,
+              roleName : data.field.roleName,
+              roleDesc : data.field.roleDesc,
+            }
+            $.post(layui.setter.host + 'AppAdmin/Roles.jsp',item,function(success) {
+              if(JSON.parse(success).status === 1) {
+                layer.msg('添加成功!')
+              } else {
+                layer.msg('添加失败')
+              }
+              layui.table.reload('template-role-table'); //重载表格
+              layer.close(index); //执行关闭
+            })
+          });
+        });
+      }
+    });
+  });
+  //TAB面板4相关--------------------------------------------------------------------------------
+
+  //保存查询条件
+  var userQuery = layui.data('userQuery').userQuery || {cj10txt:'',cj30tx:'',typ:'jxs',userid:'',username:''}
+  form.val('role-authority-formlist',{
+    cj10txt: userQuery.cj10txt,//事业部
+    cj30txt: userQuery.cj30txt,//部门
+    typ: userQuery.typ,
+    userid: userQuery.userid,
+    username: userQuery.username,
+  })
+  //table的渲染
+  var tempUsertype = layui.data('userType').userType
+  var tab4Table = table.render({
+    elem: '#role-authority-table',
+    url: layui.setter.host + 'AppAdmin/UserApps.jsp',
+    where: {act:'onLoad',appId:layui.data('appId').appId,cj10txt: userQuery.cj10txt,cj30txt: userQuery.cj30txt, typ: userQuery.typ, userid: userQuery.userid, username: userQuery.username,},
+    cols: [[
+      {title: '账号种类',field: 'typ',width:120,align:'center', sort: true, templet: '#typTpl'},
+      {title: '工号',field: 'userid',width:90,align:'center', sort: true},
+      {title: '姓名',field: 'username',width:80,align:'center' ,edit:'text',sort: true},
+      {title:'事业部',field: 'cj10txt',align:'center',edit:'text',sort: true},
+      {title: '工厂',field: 'cj20txt',align:'center',edit:'text',sort: true},
+      {title: '部门',field: 'cj30txt',align:'center',edit:'text',sort: true},
+      {title: '科室',field: 'cj40txt',width:80,align:'center',edit:'text',sort: true},
+      {title: '班组/大区',field: 'cj50txt',width:80,align:'center',edit:'text',sort: true},
+      {title: '拉/区域',field: 'cj60txt',width:80,align:'center',edit:'text',sort: true},
+      {title: '岗位',field: 'gw',align:'center',edit:'text',sort: true},
+      {title: '密码',field: 'password',align:'center',edit:'text'},
+      {title: '手机号',field: 'telphone',align:'center',edit:'text'},
+      {title: '工作地点',field: 'gzdd',align:'center',edit:'text'},
+      {title: '操作',width:160, unresize: true, align:'center', toolbar: '#role-authority-table-tool',fixed: 'right'}
+    ]],
+    page: true,
+    limit: 20,
+    limits: [20,40,60,100,200,500],
+    skin: 'line',
+    response:{statusName: 'status',statusCode:'1'},
+    height: 'full-320',
+    text: { none: '暂无数据' },
+  });
+  
+  //监听工具条
+  table.on('tool(role-authority-table)', function(obj){
+    var data = obj.data;
+    if(obj.event === 'del'){
+      layer.confirm('是否确认删除?', function(index){
+        $.post(layui.setter.host + 'AppAdmin/FunsArgs.jsp',{act: 'listDelete',leixing:'user',leixingId:data.userid, appId: layui.data('appId').appId},function(success) {
+          console.log('删除用户权限条件控制');
+          console.log(success); 
+        })
+        $.post(layui.setter.host + 'AppAdmin/UserRoles.jsp',{act: 'delete',empnum: data.userid, appId: layui.data('appId').appId},function(success) {
+          console.log('删除用户角色');
+          console.log(success);
+        })
+        $.post(layui.setter.host + 'AppAdmin/Funs.jsp',{act: 'deleteLeixingFuns',leixing:'user',leixingId:data.userid, appId: layui.data('appId').appId},function(success) {
+          console.log('删除用户已开启的功能');
+          console.log(success);
+        })
+        $.post(layui.setter.host + 'AppAdmin/UserApps.jsp',{act: 'delete',userid: data.userid, appId: layui.data('appId').appId},function(success) {
+          console.log('删除用户基本信息');
+          console.log(success);
+          if(JSON.parse(success).status === 1) layer.msg('删除成功!')
+          else layer.msg('删除失败')
+          obj.del();
+          layer.close(index);
+        })
+      });
+    } else if(obj.event === 'edit'){
+      layui.data('userid', {key: 'userid',value: data.userid});
+      layui.data('gangwei', {key: 'gangwei',value: data.gw});
+      layui.data('pagedepth', {key: 'pagedepth3',value: data.username});
+      layui.data('leixing', {key: 'leixing',value: 'user'});
+      layui.data('leixing', {key: 'leixingId',value: data.userid});
+      location.hash = '/authorityControl/tab4Edit/index';
+    }
+  });
+  //监听单元格编辑
+  table.on('edit(role-authority-table)', function(obj){ //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+    console.log(obj.value); //得到修改后的值
+    console.log(obj.field); //当前编辑的字段名
+    console.log(obj.data); //所在行的所有相关数据  
+    var data = obj.data;
+    $.post(layui.setter.host + 'AppAdmin/UserApps.jsp',{act: 'save',userid: data.userid, appId: data.appId,[obj.field]:obj.value},function(success) {
+      console.log(success);
+      if(JSON.parse(success).status === 1) layer.msg('修改成功!')
+      else layer.msg('修改失败')
+    })
+    //修改基本信息时，user表也要修改
+    if(obj.field !== 'password'&&obj.field !== 'telphone') {
+      $.post(layui.setter.host + 'AppAdmin/Users.jsp',{act: 'save',userid: data.userid,[obj.field]:obj.value},function(success) {
+        console.log('user表也已经修改',success);
+      })
+    }
+  });
+  //form查询表单
+  form.render(null, 'role-authority-formlist');
+  form.on('submit(role-authority-search)', function(data){
+    var field = data.field;
+    field.typ='jxs'
+    for(var key in field){
+      if(key !== 'typ'&& field[key] !== '') { field.typ='';console.log('key',key); break; }
+    }
+    layui.data('userQuery',{key:'userQuery',value:field})
+    //搜索完后重载
+    table.reload('role-authority-table', {
+      where: field
+    });
+  });
+  //form回车键监听
+  $('#role-authority-formlist').keyup(function(event){
+    if(event.keyCode ==13){
+      $("#role-authority-search").trigger("click");
+    }
+  });
+  //数据导出按钮监听
+  $('#role-authority-download').on('click', function() {
+    table.exportFile(tab4Table.config.id);
+  })
+
+  //表格type下拉框事件监控
+  table.on('row(role-authority-table)',function(obj) {
+    form.on('select(typTpl)', function (data) {
+
+      var objdata = obj.data
+      console.log(objdata);
+      var message=$("select[name=typTpl").val();
+
+      $.post(layui.setter.host + 'AppAdmin/UserApps.jsp',{act: 'save',userid: objdata.userid, appId: objdata.appId,typ:message},function(success) {
+        console.log(success);
+        if(JSON.parse(success).status === 1) layer.msg('修改成功!')
+        else layer.msg('修改失败')
+      })
+      //修改基本信息时，user表也要修改
+      $.post(layui.setter.host + 'AppAdmin/Users.jsp',{act: 'save',userid: objdata.userid,typ:message},function(success) {
+        console.log('user表也已经修改',success);
+      })
+    })
+
+  })
+  
+   
+
+
+  //table的左上角add增加按钮
+  $('#role-authority-add').on('click', function(){
+    admin.popup({
+      title: '新用户'
+      ,area: ['400px', '700px']
+      ,id: 'role-authority-popup-add'
+      ,success: function(layero, index){
+        view(this.id).render('authorityControl/popup/tab4RoleAuthorityAddForm').done(function(){
+          form.render(null, 'role-authority-table-addform');
+
+          $('#userid').blur(function() {
+            $.get(layui.setter.host + 'AppAdmin/Users.jsp',{userid:this.value},function(data) {
+              item = JSON.parse(data).data[0]
+              console.log(item)
+              form.val("role-authority-table-addform", {
+                "username": item.username,
+                "userid": item.userid,
+                "cj10txt": item.cj10txt,
+                "cj10": item.cj10,
+                "cj20txt": item.cj20txt,
+                "cj20": item.cj20,
+                "cj30txt": item.cj30txt,
+                "cj30": item.cj30,
+                "cj40txt": item.cj40txt,
+                "cj40": item.cj40,
+                "cj50txt": item.cj50txt,
+                "cj50": item.cj50,
+                "cj60txt": item.cj60txt,
+                "cj60": item.cj60,
+                "gw": item.gw,
+                "gzdd": item.gzdd,
+              })
+            })
+          })
+          //监听提交
+          form.on('submit(r-a-popform-submit)', function(data){
+            var item = data.field
+            var postData = {
+              act: 'save',
+              appId : layui.data('appId').appId,
+              username: item.username,
+              userid: item.userid,
+              cj10txt: item.cj10txt,
+              cj10: item.cj10,
+              cj20txt: item.cj20txt,
+              cj20: item.cj20,
+              cj30txt: item.cj30txt,
+              cj30: item.cj30,
+              cj40txt: item.cj40txt,
+              cj40: item.cj40,
+              cj50txt: item.cj50txt,
+              cj50: item.cj50,
+              cj60txt: item.cj60txt,
+              cj60: item.cj60,
+              gw: item.gw,
+              gzdd: item.gzdd,
+              typ: 'byd',
+              password: item.password,
+              telphone: item.telphone,
+            }
+            $.post(layui.setter.host + 'AppAdmin/UserApps.jsp',postData,function(complete) {
+              var completeObj = JSON.parse(complete)
+              if(completeObj.status === 1) {
+                layer.msg('添加成功!')
+              } else {
+                layer.msg(completeObj.message)
+              }
+              layui.table.reload('role-authority-table'); //重载表格
+              layer.close(index); //执行关闭
+            })
+          });
+        });
+      }
+    });
+  });
+  //TAB面板5相关--------------------------------------------------------------------------------
+  table.render({
+    id: 'super-admin-table',
+    elem: '#super-admin-table',
+    url: layui.setter.host + 'AppAdmin/Suerusers.jsp',
+    where: {appId:layui.data('appId').appId},
+    cols: [[
+      {field: 'empnum', align:'center', title: '工号',width:120, sort: true},
+      {field: 'empname', align:'center', title: '姓名',sort: true},
+      {field: 'authAdmin', title: '权限管理员',  align:'center', templet: '#super-admin-table-authAdmin'},
+      {field: 'appAdmin', title: '系统管理员',  align:'center', templet: '#super-admin-table-appAdmin'},
+      {title: '操作',width:100, unresize: true, align:'center', toolbar: '#super-admin-table-tool',fixed: 'right'}
+    ]],
+    page: true,
+    limit: 20,
+    skin: 'line',
+    response:{statusName: 'status',statusCode:'1'},
+    height: 'full-280',
+    text: { none: '暂无数据' },
+  });
+
+  //监听table中form元素
+  form.on('checkbox(authAdminLock)', function(obj){
+    var item = {
+        act: 'save',
+        id: this.name,
+        authAdmin : obj.elem.checked  ? '1' : '0',
+      }
+    $.post(layui.setter.host + 'AppAdmin/Suerusers.jsp',item,function(success) {
+      if(JSON.parse(success).status === 1) layer.msg('修改成功!')
+      else layer.msg('修改失败')
+    })
+  });
+  form.on('checkbox(appAdminLock)', function(obj){
+    var item = {
+        act: 'save',
+        id: this.name,
+        appAdmin : obj.elem.checked  ? '1' : '0',
+      }
+    $.post(layui.setter.host + 'AppAdmin/Suerusers.jsp',item,function(success) {
+      if(JSON.parse(success).status === 1) {
+        layer.msg('修改成功!')
+      } else {
+        layer.msg('修改失败')
+      }
+    })
+  });
+  //监听工具条
+  table.on('tool(super-admin-table)', function(obj){
+    layer.confirm('是否确认删除?', function(index){
+      $.post(layui.setter.host + 'AppAdmin/Suerusers.jsp',{act: 'delete',id: obj.data.id},function(success) {
+        console.log(JSON.parse(success))
+        if(JSON.parse(success).status === 1) layer.msg('删除成功!')
+        else layer.msg('删除失败')
+        obj.del();
+        layer.close(index);
+      })
+    });
+  });
+  //table的左上角add增加按钮
+  $('#super-admin-add').on('click', function(){
+    admin.popup({
+      title: '添加高级用户'
+      ,area: ['450px', '350px']
+      ,id: 'super-admin-popup-add'
+      ,success: function(layero, index){
+        view(this.id).render('authorityControl/popup/tab5SuperAdminAddForm').done(function(){
+          form.render(null, 'super-admin-table-addform');
+          //监听提交
+          form.on('submit(s-a-popform-submit)', function(data){
+            var item = {
+              act: 'save',
+              appId : layui.data('appId').appId,
+              empnum : data.field.empnum,
+              empname : data.field.empname,
+              authAdmin : data.field.authAdmin === 'on' ? '1' : '0',
+              appAdmin : data.field.appAdmin === 'on' ? '1' : '0',
+            }
+            $.post(layui.setter.host + 'AppAdmin/Suerusers.jsp',item,function(success) {
+              if(JSON.parse(success).status === 1) {
+                layer.msg('添加成功!')
+              } else {
+                layer.msg('添加失败')
+              }
+              layui.table.reload('super-admin-table'); //重载表格
+              layer.close(index); //执行关闭
+            })
+          });
+        });
+      }
+    });
+  });
+});
+
+layui.data.done = function(d){
+  layui.use(['form'], function(){
+    var form = layui.form;
+     form.render(null, 'app-form'); //渲染该模板下的动态表单
+  });
+};
+</script>
+
+<script type="text/html" id="typTpl">
+  <form class="layui-form">
+    <select lay-verify="" lay-filter="typTpl" name="typTpl">
+      <option value="none" {{ d.typ === 'none'? 'selected' : ''}}>无</option>
+      <option value="byd" {{ d.typ === 'byd'? 'selected' : ''}}>公司员工</option>
+      <option value="jxs" {{ d.typ === 'jxs'? 'selected' : ''}}>经销商</option>
+      <option value="d3f" {{ d.typ === 'd3f'? 'selected' : ''}}>第三方</option>
+    </select> 
+  </form>
+</script>
